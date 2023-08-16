@@ -126,6 +126,11 @@
 				"category": "Dapr"
 			},
 			{
+				"command": "vscode-dapr.builds.start",
+				"title": "%vscode-dapr.builds.start.title%",
+				"category": "Dapr"
+			},
+			{
 				"command": "vscode-dapr.runs.stop",
 				"title": "%vscode-dapr.runs.stop.title%",
 				"category": "Dapr",
@@ -238,6 +243,10 @@
 			"explorer/context": [
 				{
 					"command": "vscode-dapr.runs.start",
+					"when": "resourceFilename == dapr.yaml"
+				},
+				{
+					"command": "vscode-dapr.builds.start",
 					"when": "resourceFilename == dapr.yaml"
 				}
 			],
@@ -818,6 +827,7 @@
 		"handlebars": "^4.7.7",
 		"js-yaml": "^4.1.0",
 		"lodash.isequal": "^4.5.0",
+		"original-fs": "^1.2.0",
 		"ps-list": "^7.2.0",
 		"rxjs": "^7.8.1",
 		"semver": "^7.5.1",
