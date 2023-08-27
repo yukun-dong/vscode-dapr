@@ -23,10 +23,10 @@
     "vscode-dapr.help.reviewIssues.title": "Review Issues",
 
     "vscode-dapr.runs.debug.title": "Debug Run",
-    "vscode-dapr.runs.start.title": "[Dapr] Start Run",
+    "vscode-dapr.runs.start.title": "Start Run",
     "vscode-dapr.runs.stop.title": "Stop Run",
 
-    "vscode-dapr.builds.start.title": "[Dapr] Build Apps",
+    "vscode-dapr.builds.start.title": "Build Apps",
     "vscode-dapr.builds.building": "Building",
 
     "vscode-dapr.tasks.scaffoldDaprComponents.title": "Scaffold Dapr Components",
