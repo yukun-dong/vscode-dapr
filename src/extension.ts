@@ -6,6 +6,7 @@ import * as vscode from 'vscode';
 import DaprCommandTaskProvider from './tasks/daprCommandTaskProvider';
 import DaprdCommandTaskProvider from './tasks/daprdCommandTaskProvider';
 import DaprdDownTaskProvider from './tasks/daprdDownTaskProvider';
+import DaprBuildTaskProvider from './tasks/daprBuildTaskProvider';
 import { createAzExtOutputChannel, registerUIExtensionVariables, IActionContext } from '@microsoft/vscode-azext-utils';
 import ext from './ext';
 import DaprApplicationTreeDataProvider from './views/applications/daprApplicationTreeDataProvider';
@@ -47,6 +48,7 @@ import createViewAppLogsCommand from './commands/applications/viewAppLogs';
 import createViewDaprLogsCommand from './commands/applications/viewDaprLogs';
 import createBrowseToApplicationCommand from './commands/applications/browseToApplication';
 import createScaffoldDaprTemplatesCommand from './commands/scaffoldDaprTemplates';
+import createBuildAppCommand from './commands/applications/buildApp';
 
 interface ExtensionPackage {
 	engines: { [key: string]: string };
@@ -99,7 +101,8 @@ export function activate(context: vscode.ExtensionContext): Promise<void> {
 				daprCliClient,
 				ui);
 			const daprCommandTaskProvider = new DaprCommandTaskProvider(daprInstallationManager, () => settingsProvider.daprPath, telemetryProvider);
-
+			const daprBuildTaskProvider = new DaprBuildTaskProvider(telemetryProvider)
+			
 			telemetryProvider.registerContextCommandWithTelemetry('vscode-dapr.applications.browse', createBrowseToApplicationCommand(ui));
 			telemetryProvider.registerContextCommandWithTelemetry('vscode-dapr.applications.debug', createDebugApplicationCommand());
 			telemetryProvider.registerContextCommandWithTelemetry('vscode-dapr.applications.invoke-get', createInvokeGetCommand(daprApplicationProvider, daprClient, ext.outputChannel, ui, context.workspaceState));
@@ -117,6 +120,7 @@ export function activate(context: vscode.ExtensionContext): Promise<void> {
 			telemetryProvider.registerContextCommandWithTelemetry('vscode-dapr.runs.debug', createDebugRunCommand());
 			telemetryProvider.registerCommandWithTelemetry('vscode-dapr.runs.start', createStartRunCommand(daprCommandTaskProvider));
 			telemetryProvider.registerContextCommandWithTelemetry('vscode-dapr.runs.stop', createStopRunCommand(daprCliClient));
+			telemetryProvider.registerCommandWithTelemetry('vscode-dapr.builds.start', createBuildAppCommand(daprBuildTaskProvider));
 			telemetryProvider.registerCommandWithTelemetry('vscode-dapr.tasks.scaffoldDaprComponents', createScaffoldDaprComponentsCommand(scaffolder, templateScaffolder));
 			telemetryProvider.registerCommandWithTelemetry('vscode-dapr.tasks.scaffoldDaprTasks', createScaffoldDaprTasksCommand(scaffolder, templateScaffolder, ui));
 			telemetryProvider.registerContextCommandWithTelemetry('vscode-dapr.tasks.openDaprDashboard', createOpenDaprDashboardCommand(daprDashboardProvider));
