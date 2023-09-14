@@ -10,16 +10,12 @@ jobs:
     steps:
     - name: Check Out Code
       uses: actions/checkout@v3
-      
-    - name: Set Up PNPM
-      uses: pnpm/action-setup@v2
-      with:
-        version: 8
+  
     - name: Package VSIX
       run: |
-        pnpm install
-        pnpm run build
-        pnpm dlx vsce package --no-dependencies
+        npm install
+        npm run build
+        npm run package
     - name: Upload VSIX To Artifacts
       uses: actions/upload-artifact@v3
       with:
