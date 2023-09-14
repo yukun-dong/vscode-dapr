@@ -1,0 +1,25 @@
+name: Release Code Templates
+
+on:
+  workflow_dispatch:
+
+jobs:
+  ZipAndRelease:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check Out Code
+      uses: actions/checkout@v3
+    - name: Zip Templates
+      uses: montudor/action-zip@v1.0.0
+      with:
+        args: zip -qq -r distributed-calculator.zip ./templates/distributed-calculator
+    - name: Update GitHub Release
+      uses: fnkr/github-action-ghr@v1
+      env:
+          GHR_COMPRESS: zip
+          GHR_PATH: ./distributed-calculator.zip
+          GHR_DELETE: true
+          GHR_REPLACE: true
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+    
+    
