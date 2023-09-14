@@ -1,0 +1,27 @@
+name: Release VSIX
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+jobs:
+  ReleaseVSIX:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check Out Code
+      uses: actions/checkout@v3
+      
+    - name: Set Up PNPM
+      uses: pnpm/action-setup@v2
+      with:
+        version: 8
+    - name: Package VSIX
+      run: |
+        pnpm dlx vsce package --no-dependencies
+    - name: Upload VSIX To Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: vsix
+        path: |
+          *.vsix
+        
