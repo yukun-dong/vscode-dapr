@@ -17,6 +17,8 @@ jobs:
         version: 8
     - name: Package VSIX
       run: |
+        pnpm install
+        pnpm run build
         pnpm dlx vsce package --no-dependencies
     - name: Upload VSIX To Artifacts
       uses: actions/upload-artifact@v3
