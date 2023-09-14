@@ -1,7 +1,7 @@
 name: Release Code Templates
 
 on:
-  workflow_dispatch:
+  push:
 
 jobs:
   ZipAndRelease:
@@ -15,6 +15,7 @@ jobs:
         args: zip -qq -r distributed-calculator.zip ./templates/distributed-calculator
     - name: Update GitHub Release
       uses: fnkr/github-action-ghr@v1
+      if: startsWith(github.ref, 'refs/tags/templates-')
       env:
           GHR_COMPRESS: zip
           GHR_PATH: ./distributed-calculator.zip
