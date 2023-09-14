@@ -10,7 +10,10 @@ jobs:
     - name: Check Out Code
       uses: actions/checkout@v3
     - name: Zip Templates
-      run: zip -qq -r distributed-calculator.zip ./templates/distributed-calculator
+      run: |
+        cd ./templates/distributed-calculator; 
+        zip -r ../../distributed-calculator.zip ./*; 
+        cd -
     - name: Update GitHub Release
       uses: fnkr/github-action-ghr@v1
       if: startsWith(github.ref, 'refs/tags/templates-')
