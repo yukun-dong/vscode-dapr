@@ -15,7 +15,6 @@ jobs:
       uses: fnkr/github-action-ghr@v1
       if: startsWith(github.ref, 'refs/tags/templates-')
       env:
-          GHR_COMPRESS: zip
           GHR_PATH: ./distributed-calculator.zip
           GHR_DELETE: true
           GHR_REPLACE: true
