@@ -10,7 +10,7 @@ import { getLocalizationPathForFile } from '../util/localization';
 import axios from 'axios';
 import AdmZip from 'adm-zip';
 import { UserInput, WizardStep } from '../services/userInput';
-import { template } from 'handlebars';
+import * as ResourceManagementClient from '@azure/arm-resources';
 
 const localize = nls.loadMessageBundle(getLocalizationPathForFile(__filename));
 
@@ -28,31 +28,31 @@ const distributedCalculatorTemplate: Template = {
 
 const templates: Template[] = [distributedCalculatorTemplate];
 
-
-async function scaffoldDaprTemplates(ui: UserInput): Promise<void> {
-    const templateStep: WizardStep<any> =
-        async wizardContext => {
-            const templateItems = templates.map(template => ({ label: template.name, template }));
-            const templateItem = await ui.showQuickPick(templateItems, { placeHolder: localize('commands.scaffoldDaprTasks.configurationPlaceholder', 'Select the template') });
-            return {
-                ...wizardContext,
-                template: templateItem.template,
-            };
-        };
-
-    const result = await ui.showWizard({ title: localize('commands.scaffoldDaprTasks.wizardTitle', 'Scaffold Dapr Tasks') }, templateStep);
-
-    const templateDir = await chooseDirectory();
-    if (!templateDir) {
-        return;
-    }
-    const templatePath = path.join(templateDir.fsPath, result.template.label);
-    await fs.mkdir(templatePath, { recursive: true });
-    const zip = await downloadZip(result.template.url);
-    await unzip(zip, templatePath);
-    await vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(templatePath), true);
-
+async function getAzureAccount(): Promise<any> {
+    const azureAccount =
+        vscode.extensions.getExtension<any>("ms-vscode.azure-account")!.exports;
+    return azureAccount;
 }
+
+async function createResourceGroup(subscriptionId: string, resourceGroupName: string, location: string, credentials: any) {
+    const client = new ResourceManagementClient.ResourceManagementClient(credentials, subscriptionId);
+
+    const parameters = {
+        location: location
+    };
+
+    const result = await client.resourceGroups.createOrUpdate(resourceGroupName, parameters);
+    console.log(result);
+}
+async function scaffoldDaprTemplates(ui: UserInput): Promise<void> {
+    await vscode.commands.executeCommand("azure-account.login");
+    const azureAccount = await getAzureAccount();
+    await azureAccount.waitForSubscriptions();
+    let credential2 = azureAccount.subscriptions[0].session.credentials2;
+    await createResourceGroup('1756abc0-3554-4341-8d6a-46674962ea19','yukuntest123','eastus',credential2);
+}
+
+
 
 async function chooseDirectory(): Promise<vscode.Uri | undefined> {
     const options: vscode.OpenDialogOptions = {
